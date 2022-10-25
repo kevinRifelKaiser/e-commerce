@@ -3,7 +3,6 @@ import express from 'express';
 import morgan from 'morgan';
 import router from './routes/task.routes.js';
 import path from 'path';
-import main from './database.js';
 
 const app = express();
 
@@ -19,7 +18,7 @@ app.use('/api', router);
 
 // Static files
 const __dirname = path.resolve();
-app.use(express.static(path.join(__dirname + '/src/public')));
+app.use(express.static(path.join(__dirname + '/server/public')));
 
 // Starting the server
 app.listen(app.get('port'), () => {
