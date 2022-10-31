@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const URI = 'mongodb://localhost/garage-sale'
+const URI = 'mongodb://localhost/garage-sale';
 
 main().catch(err => console.log(err));
 
