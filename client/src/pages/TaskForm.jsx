@@ -1,24 +1,53 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Formik } from "formik";
-import { createTask } from "../api/tasks.api";
+import { useTasks } from "../context/TaskContext";
+import { useNavigate, useParams } from "react-router-dom";
+import { Navigate } from 'react-router-dom';
 
 function TaskForm() {
+  const { createTask, getTask, updateTask } = useTasks();
+
+  const params = useParams();
+
+  const [task, setTasks] = useState({
+    title: "",
+    description: "",
+  });
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const loadTask = async () => {
+      if (params.id) {
+        const task = await getTask(params.id);
+        setTasks({
+          title: task.title,
+          description: task.description,
+        });
+      }
+    };
+    loadTask();
+  }, []);
+
   return (
     <div>
+      <h1>{params.id ? "Edit task" : "New task"}</h1>
+
       <Formik
-        initialValues={{
-          title: "",
-          description: "",
-        }}
+        initialValues={task}
+        enableReinitialize={true}
         onSubmit={async (values, actions) => {
           console.log(values);
-          try {
-            const response = await createTask(values);
-            console.log(response);
-            actions.resetForm();
-          } catch (error) {
-            console.log(error);
+          if (params.id) {
+            await updateTask(params.id, values);
+            navigate('/tasks');
+          } else {
+            await createTask(values);
           }
+          setTasks({
+            title: "",
+            description: "",
+          });
         }}
       >
         {({ handleChange, handleSubmit, values, isSubmitting }) => (
@@ -39,7 +68,7 @@ function TaskForm() {
               value={values.description}
             ></textarea>
             <button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Submiting..." : "Submit"}
+              {isSubmitting ? "Saving..." : "Save"}
             </button>
           </Form>
         )}

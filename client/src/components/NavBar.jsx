@@ -9,7 +9,10 @@ function NavBar() {
           <Link to="/">Home</Link>
         </li>
         <li>
-          <Link to="/discover">Discover</Link>
+          <Link to="/tasks">Tasks</Link>
+        </li>
+        <li>
+          <Link to="/createTask">Create task</Link>
         </li>
       </ul>
     </div>
