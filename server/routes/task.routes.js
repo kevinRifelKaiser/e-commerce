@@ -14,14 +14,14 @@ router.get("/:id", async (req, res) => {
 
 router.post("/", async (req, res) => {
   const { title, description } = req.body;
-  const task = new Task({ title, description });
+  const task = new Task({ title, description, done: 0 });
   await task.save();
   res.json({ status: "Task correctly saved on DB" });
 });
 
 router.put("/:id", async (req, res) => {
-  const { title, description } = req.body;
-  const updateTask = { title, description };
+  const { title, description, done } = req.body;
+  const updateTask = { title, description, done };
   await Task.findByIdAndUpdate(req.params.id, updateTask);
   res.json({ status: "Task correctly updated on DB" });
 });

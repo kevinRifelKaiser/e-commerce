@@ -12,6 +12,7 @@ function TaskForm() {
   const [task, setTasks] = useState({
     title: "",
     description: "",
+    done: 0,
   });
 
   const navigate = useNavigate();
@@ -23,6 +24,7 @@ function TaskForm() {
         setTasks({
           title: task.title,
           description: task.description,
+          done: 0,
         });
       }
     };
@@ -35,7 +37,6 @@ function TaskForm() {
 
       <Formik
         initialValues={task}
-        enableReinitialize={true}
         onSubmit={async (values, actions) => {
           console.log(values);
           if (params.id) {
@@ -47,7 +48,9 @@ function TaskForm() {
           setTasks({
             title: "",
             description: "",
+            done: 0,
           });
+          actions.resetForm(task);x
         }}
       >
         {({ handleChange, handleSubmit, values, isSubmitting }) => (
