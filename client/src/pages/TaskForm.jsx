@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Form, Formik } from "formik";
+import { Form, Formik, Field } from "formik";
 import { useTasks } from "../context/TaskContext";
 import { useNavigate, useParams } from "react-router-dom";
-import { Navigate } from 'react-router-dom';
+import { Navigate } from "react-router-dom";
 
 function TaskForm() {
   const { createTask, getTask, updateTask } = useTasks();
@@ -16,6 +16,13 @@ function TaskForm() {
   });
 
   const navigate = useNavigate();
+
+  //Field required function
+  const fieldRequired = (value) => {
+    if (!value) {
+      return "Required";
+    }
+  };
 
   useEffect(() => {
     const loadTask = async () => {
@@ -37,11 +44,12 @@ function TaskForm() {
 
       <Formik
         initialValues={task}
+        enableReinitialize={true}
         onSubmit={async (values, actions) => {
           console.log(values);
           if (params.id) {
             await updateTask(params.id, values);
-            navigate('/tasks');
+            navigate("/tasks");
           } else {
             await createTask(values);
           }
@@ -50,26 +58,28 @@ function TaskForm() {
             description: "",
             done: 0,
           });
-          actions.resetForm(task);x
+          actions.resetForm(task);
         }}
       >
         {({ handleChange, handleSubmit, values, isSubmitting }) => (
           <Form onSubmit={handleSubmit}>
             <label>title</label>
-            <input
+            <Field
               onChange={handleChange}
               type="text"
               name="title"
               placeholder="Enter your name"
               value={values.title}
-            ></input>
+              validate={fieldRequired}
+            ></Field>
             <label>description</label>
-            <textarea
+            <Field
               onChange={handleChange}
               name="description"
               placeholder="Write a description"
               value={values.description}
-            ></textarea>
+              validate={fieldRequired}
+            ></Field>
             <button type="submit" disabled={isSubmitting}>
               {isSubmitting ? "Saving..." : "Save"}
             </button>
